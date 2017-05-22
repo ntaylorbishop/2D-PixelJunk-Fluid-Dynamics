@@ -1,54 +1,21 @@
+#include "Game/Particle.hpp"
 #include "Game/TheGame.hpp"
-#include "Game/FlowManager.hpp"
-#include "Engine/General/Core/BeirusEngine.hpp"
 #include "Engine/Renderer/Renderer/BeirusRenderer.hpp"
-#include "Engine/Input/InputSystem.hpp"
-
-
-TheGame* TheGame::s_theGame = nullptr;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//STATIC INIT DESTROY
+//STRUCTORS
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //---------------------------------------------------------------------------------------------------------------------------
-STATIC void TheGame::Initialize() {
-
-	s_theGame = new TheGame();
-	BeirusEngine::RegisterUpdateCallback(MakeDelegate(s_theGame, &TheGame::Update));
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------------
-STATIC void TheGame::Shutdown() {
-
-	BeirusEngine::UnregisterUpdateCallback(MakeDelegate(s_theGame, &TheGame::Update));
-	delete s_theGame;
-}
+Particle::Particle(const Vector3& position, const float radius) 
+	: m_position(position)
+	, m_radius(radius)
+{ }
 
 
 //---------------------------------------------------------------------------------------------------------------------------
-STATIC void TheGame::Render() {
-	s_theGame->InternalRender();
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//STRUCTORS INITIALIZATION
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//---------------------------------------------------------------------------------------------------------------------------
-TheGame::TheGame() {
-
-	BeirusRenderer::ClearScreen(RGBA(0.1f, 0.1f, 0.1f, 1.f));
-	m_camera = Camera2D(Vector2::ZERO, 0.f, AABB2(Vector2(-100.f), Vector2(100.f)), 10.f, 16.f / 9.f);
-	m_waterFlow = new FlowManager();
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------------
-TheGame::~TheGame() {
+Particle::~Particle() {
 
 }
 
@@ -58,13 +25,10 @@ TheGame::~TheGame() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //---------------------------------------------------------------------------------------------------------------------------
-void TheGame::Update(float deltaSeconds) {
+void Particle::Update(float deltaSeconds) {
 
-	if (InputSystem::GetKeyDown('U')) {
-		m_waterFlow->SpawnParticle(Vector3(0.f));
-	}
-
-	m_waterFlow->Update(deltaSeconds);
+	m_position += m_velocity * deltaSeconds;
+	m_velocity += GRAVITY * deltaSeconds;
 }
 
 
@@ -73,11 +37,41 @@ void TheGame::Update(float deltaSeconds) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //---------------------------------------------------------------------------------------------------------------------------
-void TheGame::InternalRender() const {
+void Particle::Render() const {
 
-	BeirusRenderer::ClearColor();
-	//BeirusRenderer::DrawCircle(m_camera, RGBA::GREEN, Vector3::ZERO, 0.2f);
-	int a = 0;
+	BeirusRenderer::DrawCircle(TheGame::GetCamera(), RGBA::GREEN, m_position, m_radius);
+}
 
-	m_waterFlow->Render();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//INTERFACE
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//---------------------------------------------------------------------------------------------------------------------------
+void Particle::PushUp(float bottomPlane) {
+
+	if (m_position.z - m_radius < bottomPlane) {
+		float diff = bottomPlane - (m_position.z - m_radius);
+		m_position.z += diff;
+	}
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+void Particle::PushLeft(float leftPlane) {
+
+	if (m_position.z - m_radius < leftPlane) {
+		float diff = leftPlane - (m_position.z - m_radius);
+		m_position.z += diff;
+	}
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+void Particle::PushRight(float rightPlane) {
+
+	if (m_position.z + m_radius > rightPlane) {
+		float diff = (m_position.z + m_radius) - rightPlane;
+		m_position.z -= diff;
+	}
 }

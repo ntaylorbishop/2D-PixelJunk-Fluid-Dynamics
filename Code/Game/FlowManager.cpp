@@ -1,54 +1,19 @@
-#include "Game/TheGame.hpp"
 #include "Game/FlowManager.hpp"
-#include "Engine/General/Core/BeirusEngine.hpp"
-#include "Engine/Renderer/Renderer/BeirusRenderer.hpp"
-#include "Engine/Input/InputSystem.hpp"
-
-
-TheGame* TheGame::s_theGame = nullptr;
+#include "Game/Particle.hpp"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//STATIC INIT DESTROY
+//STRUCTORS
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //---------------------------------------------------------------------------------------------------------------------------
-STATIC void TheGame::Initialize() {
+FlowManager::FlowManager() {
 
-	s_theGame = new TheGame();
-	BeirusEngine::RegisterUpdateCallback(MakeDelegate(s_theGame, &TheGame::Update));
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------------
-STATIC void TheGame::Shutdown() {
-
-	BeirusEngine::UnregisterUpdateCallback(MakeDelegate(s_theGame, &TheGame::Update));
-	delete s_theGame;
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------------
-STATIC void TheGame::Render() {
-	s_theGame->InternalRender();
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//STRUCTORS INITIALIZATION
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//---------------------------------------------------------------------------------------------------------------------------
-TheGame::TheGame() {
-
-	BeirusRenderer::ClearScreen(RGBA(0.1f, 0.1f, 0.1f, 1.f));
-	m_camera = Camera2D(Vector2::ZERO, 0.f, AABB2(Vector2(-100.f), Vector2(100.f)), 10.f, 16.f / 9.f);
-	m_waterFlow = new FlowManager();
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------------
-TheGame::~TheGame() {
+FlowManager::~FlowManager() {
 
 }
 
@@ -58,13 +23,31 @@ TheGame::~TheGame() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //---------------------------------------------------------------------------------------------------------------------------
-void TheGame::Update(float deltaSeconds) {
+void FlowManager::UpdateFlowCollisions(float deltaSeconds) {
 
-	if (InputSystem::GetKeyDown('U')) {
-		m_waterFlow->SpawnParticle(Vector3(0.f));
+	for (size_t idx = 0; idx < m_particles.size(); idx++) {
+
+		m_particles[idx]->PushLeft(LEFT_PLANE);
+		m_particles[idx]->PushRight(RIGHT_PLANE);
+		m_particles[idx]->PushUp(FLOOR_PLANE);
 	}
+}
 
-	m_waterFlow->Update(deltaSeconds);
+
+//---------------------------------------------------------------------------------------------------------------------------
+void FlowManager::UpdateParticleCollisions(float deltaSeconds) {
+
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+void FlowManager::Update(float deltaSeconds) {
+
+	for (size_t idx = 0; idx < m_particles.size(); idx++) {
+		m_particles[idx]->Update(deltaSeconds);
+	}
+	UpdateFlowCollisions(deltaSeconds);
+	UpdateParticleCollisions(deltaSeconds);
 }
 
 
@@ -73,11 +56,21 @@ void TheGame::Update(float deltaSeconds) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //---------------------------------------------------------------------------------------------------------------------------
-void TheGame::InternalRender() const {
+void FlowManager::Render() const {
 
-	BeirusRenderer::ClearColor();
-	//BeirusRenderer::DrawCircle(m_camera, RGBA::GREEN, Vector3::ZERO, 0.2f);
-	int a = 0;
+	for (size_t idx = 0; idx < m_particles.size(); idx++) {
+		m_particles[idx]->Render();
+	}
+}
 
-	m_waterFlow->Render();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//SPAWNING
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//---------------------------------------------------------------------------------------------------------------------------
+void FlowManager::SpawnParticle(const Vector3& pos) {
+
+	Particle* newParticle = new Particle(pos, 0.2f);
+	m_particles.push_back(newParticle);
 }

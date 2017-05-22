@@ -3,6 +3,8 @@
 #include "Engine/General/Core/EngineCommon.hpp"
 #include "Engine/Renderer/Cameras/Camera2D.hpp"
 
+class FlowManager;
+
 class TheGame {
 public:
 	//INIT DESTROY
@@ -10,6 +12,9 @@ public:
 	static void Shutdown();
 
 	static void Render();
+
+
+	static Camera2D& GetCamera() { return s_theGame->m_camera; }
 
 
 private:
@@ -25,6 +30,7 @@ private:
 
 
 	Camera2D m_camera;
+	FlowManager* m_waterFlow;
 
 	static TheGame* s_theGame;
 };

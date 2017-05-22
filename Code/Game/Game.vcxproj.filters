@@ -51,6 +51,9 @@
     <Filter Include="Data_x64\Shaders\Debug">
       <UniqueIdentifier>{6a53ab34-f699-43e7-b13d-21421135000f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Water">
+      <UniqueIdentifier>{04e60ad6-8e60-49a2-b4a7-6a2c2a5900a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TheApp.cpp">
@@ -65,6 +68,12 @@
     <ClCompile Include="TheGame.cpp">
       <Filter>Source\GameApp</Filter>
     </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowManager.cpp">
+      <Filter>Source\Water</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TheApp.hpp">
@@ -75,6 +84,12 @@
     </ClInclude>
     <ClInclude Include="TheGame.hpp">
       <Filter>Source\GameApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.hpp">
+      <Filter>Source\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowManager.hpp">
+      <Filter>Source\Water</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
