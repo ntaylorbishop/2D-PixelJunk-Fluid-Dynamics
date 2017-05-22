@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/General/Core/EngineCommon.hpp"
+#include "Engine/Renderer/Cameras/Camera2D.hpp"
 
 class TheGame {
 public:
@@ -22,6 +23,8 @@ private:
 	//RENDER
 	void InternalRender() const;
 
+
+	Camera2D m_camera;
 
 	static TheGame* s_theGame;
 };

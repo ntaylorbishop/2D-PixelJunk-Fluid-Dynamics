@@ -1,5 +1,6 @@
 #include "Game/TheGame.hpp"
 #include "Engine/General/Core/BeirusEngine.hpp"
+#include "Engine/Renderer/Renderer/BeirusRenderer.hpp"
 
 
 TheGame* TheGame::s_theGame = nullptr;
@@ -38,6 +39,8 @@ STATIC void TheGame::Render() {
 //---------------------------------------------------------------------------------------------------------------------------
 TheGame::TheGame() {
 
+	BeirusRenderer::ClearScreen(RGBA(0.1f, 0.1f, 0.1f, 1.f));
+	m_camera = Camera2D(Vector2::ZERO, 0.f, AABB2(Vector2(-100.f), Vector2(100.f)), 10.f, 16.f / 9.f);
 }
 
 
@@ -64,4 +67,7 @@ void TheGame::Update(float deltaSeconds) {
 //---------------------------------------------------------------------------------------------------------------------------
 void TheGame::InternalRender() const {
 
+	BeirusRenderer::ClearColor();
+	BeirusRenderer::DrawCircle(m_camera, RGBA::GREEN, Vector3::ZERO, 0.2f);
+	int a = 0;
 }
