@@ -22,8 +22,8 @@ public:
 	void PushRight(float rightPlane);
 
 
-private:
 	Vector3 m_position	= Vector3::ZERO;
-	float	m_radius	= 0.f;
 	Vector3 m_velocity	= Vector3::ZERO;
+	float	m_radius	= 0.f;
+private:
 };

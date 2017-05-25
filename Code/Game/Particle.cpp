@@ -50,9 +50,11 @@ void Particle::Render() const {
 //---------------------------------------------------------------------------------------------------------------------------
 void Particle::PushUp(float bottomPlane) {
 
-	if (m_position.z - m_radius < bottomPlane) {
-		float diff = bottomPlane - (m_position.z - m_radius);
-		m_position.z += diff;
+	if (m_position.y - m_radius < bottomPlane) {
+		float diff = bottomPlane - (m_position.y - m_radius);
+		m_position.y += diff;
+
+		//m_velocity = -m_velocity / 2.f;
 	}
 }
 
@@ -60,9 +62,9 @@ void Particle::PushUp(float bottomPlane) {
 //---------------------------------------------------------------------------------------------------------------------------
 void Particle::PushLeft(float leftPlane) {
 
-	if (m_position.z - m_radius < leftPlane) {
-		float diff = leftPlane - (m_position.z - m_radius);
-		m_position.z += diff;
+	if (m_position.x - m_radius < leftPlane) {
+		float diff = leftPlane - (m_position.x - m_radius);
+		m_position.x += diff;
 	}
 }
 
@@ -70,8 +72,8 @@ void Particle::PushLeft(float leftPlane) {
 //---------------------------------------------------------------------------------------------------------------------------
 void Particle::PushRight(float rightPlane) {
 
-	if (m_position.z + m_radius > rightPlane) {
-		float diff = (m_position.z + m_radius) - rightPlane;
-		m_position.z -= diff;
+	if (m_position.x + m_radius > rightPlane) {
+		float diff = (m_position.x + m_radius) - rightPlane;
+		m_position.x -= diff;
 	}
 }

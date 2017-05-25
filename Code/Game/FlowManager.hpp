@@ -5,9 +5,9 @@
 
 class Particle;
 
-const float FLOOR_PLANE = -9.f;
-const float LEFT_PLANE	= -9.f;
-const float RIGHT_PLANE = 9.f;
+const float FLOOR_PLANE = -4.f;
+const float LEFT_PLANE	= -4.f;
+const float RIGHT_PLANE = 4.f;
 
 class FlowManager {
 public:
